@@ -135,19 +135,21 @@ export function Navbar() {
             transition={{ duration: 0.3, delay: 0.1 }}
             className="fixed top-4 left-1/2 transform -translate-x-1/2 z-40 hidden md:block"
           >
-          <div className="bg-background/95 backdrop-blur-md border border-border rounded-full px-6 py-3 shadow-lg">
-            <nav className="flex items-center space-x-6">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="relative text-foreground hover:text-primary transition-colors font-medium text-sm group"
-                >
-                  {link.label}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
-                </Link>
-              ))}
-            </nav>
+          <div className="relative bg-gradient-to-r from-background/95 via-primary/10 to-accent/10 backdrop-blur-md rounded-full px-6 py-3 shadow-xl border border-primary/20 before:absolute before:inset-0 before:rounded-full before:p-[1px] before:bg-gradient-to-r before:from-primary/50 before:via-accent/50 before:to-primary/50 before:-z-10">
+            <div className="relative bg-gradient-to-r from-background/95 via-primary/5 to-background/95 backdrop-blur-md rounded-full px-6 py-3">
+              <nav className="flex items-center space-x-6">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="relative text-foreground hover:text-primary transition-colors font-medium text-sm group"
+                  >
+                    {link.label}
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent group-hover:w-full transition-all duration-300"></span>
+                  </Link>
+                ))}
+              </nav>
+            </div>
           </div>
         </motion.nav>
       )}
