@@ -1,65 +1,184 @@
-import Image from "next/image";
+"use client"
+
+import { Navbar } from "@/components/navbar"
+import { motion } from "framer-motion"
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <main>
+        {/* Hero Section */}
+        <section id="hero" className="flex min-h-screen items-center justify-center px-4 bg-gradient-to-br from-primary/10 via-accent/5 to-secondary/10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center"
+          >
+            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Hi, I&apos;m Mahiban
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-muted-foreground">
+              Final-year undergraduate software engineering student passionate about building modern web applications.
+            </p>
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              <a
+                href="#contact"
+                className="rounded-md bg-gradient-to-r from-primary to-accent px-3.5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:shadow-lg transition-shadow"
+              >
+                Get in touch
+              </a>
+              <a href="#projects" className="text-sm font-semibold leading-6 text-primary hover:text-accent transition-colors">
+                View my work <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </motion.div>
+        </section>
+
+        {/* About Section */}
+        <section id="about" className="py-24 sm:py-32">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="mx-auto max-w-2xl lg:mx-0"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">About Me</h2>
+              <p className="mt-6 text-lg leading-8 text-muted-foreground">
+                I&apos;m a final-year software engineering student with a passion for creating efficient, scalable, and user-friendly applications.
+                I specialize in full-stack development with expertise in modern web technologies.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Skills Section */}
+        <section id="skills" className="py-24 sm:py-32 bg-gradient-to-br from-muted/50 via-primary/5 to-accent/5">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="mx-auto max-w-2xl lg:mx-0"
             >
-              Learning
-            </a>{" "}
-            center.
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Skills</h2>
+              <div className="mt-10 grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-4">
+                {["JavaScript", "TypeScript", "React", "Next.js", "Node.js", "Python", "PostgreSQL", "AWS"].map((skill, index) => {
+                  const colors = [
+                    "from-blue-500 to-cyan-500",
+                    "from-purple-500 to-pink-500",
+                    "from-green-500 to-teal-500",
+                    "from-orange-500 to-red-500",
+                    "from-indigo-500 to-blue-500",
+                    "from-yellow-500 to-orange-500",
+                    "from-pink-500 to-rose-500",
+                    "from-teal-500 to-green-500"
+                  ];
+                  return (
+                    <motion.div
+                      key={skill}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.4, delay: index * 0.1 }}
+                      viewport={{ once: true }}
+                      className={`flex items-center justify-center rounded-lg bg-gradient-to-br ${colors[index % colors.length]} p-4 shadow-sm hover:shadow-lg transition-all hover:scale-105 text-white font-medium`}
+                    >
+                      {skill}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Projects Section */}
+        <section id="projects" className="py-24 sm:py-32 bg-gradient-to-br from-background via-secondary/5 to-muted/50">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="mx-auto max-w-2xl lg:mx-0"
+            >
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Projects</h2>
+              <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                {[1, 2, 3].map((project, index) => {
+                  const gradients = [
+                    "from-blue-500/20 to-cyan-500/20",
+                    "from-purple-500/20 to-pink-500/20",
+                    "from-green-500/20 to-teal-500/20"
+                  ];
+                  return (
+                    <motion.div
+                      key={project}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      viewport={{ once: true }}
+                      whileHover={{ y: -5, scale: 1.02 }}
+                      className={`rounded-lg bg-gradient-to-br ${gradients[index]} backdrop-blur-md border border-white/20 p-6 shadow-sm hover:shadow-xl transition-all`}
+                    >
+                      <h3 className="text-lg font-semibold">Project {project}</h3>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        A brief description of this amazing project.
+                      </p>
+                      <div className="mt-4 flex gap-2">
+                        <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                          React
+                        </span>
+                        <span className="inline-flex items-center rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent">
+                          TypeScript
+                        </span>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Contact Section */}
+        <section id="contact" className="py-24 sm:py-32 bg-gradient-to-br from-muted/50 via-accent/5 to-primary/5">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="mx-auto max-w-2xl lg:mx-0"
+            >
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Get in Touch</h2>
+              <p className="mt-6 text-lg leading-8 text-muted-foreground">
+                Ready to work together? Let&apos;s connect and discuss your next project.
+              </p>
+              <div className="mt-10">
+                <a
+                  href="mailto:john.doe@example.com"
+                  className="text-primary hover:text-primary/80"
+                >
+                  john.doe@example.com
+                </a>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t py-12">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <p className="text-center text-sm text-muted-foreground">
+            © 2024 Mahiban. All rights reserved.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </footer>
     </div>
-  );
+  )
 }
