@@ -10,6 +10,7 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isHeroVisible, setIsHeroVisible] = useState(true)
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -42,6 +43,18 @@ export function Navbar() {
     }
   }, [isHeroVisible])
 
+  // Track mobile state
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   const navLinks = [
     { href: "#hero", label: "Home" },
     { href: "#about", label: "About" },
@@ -59,7 +72,7 @@ export function Navbar() {
   return (
     <>
       <AnimatePresence mode="wait">
-        {isHeroVisible && (
+        {(isHeroVisible || isMobile) && (
           <motion.nav
             initial={{ y: 0 }}
             animate={{ y: 0 }}
@@ -127,7 +140,7 @@ export function Navbar() {
 
       {/* Second Navbar - Only visible when hero section is not visible and on desktop */}
       <AnimatePresence>
-        {!isHeroVisible && !isTransitioning && (
+        {!isHeroVisible && !isTransitioning && !isMobile && (
           <motion.nav
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -187,7 +200,7 @@ export function Navbar() {
                   </Link>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="p-2 text-foreground hover:text-primary transition-colors"
+                    className="p-2 text-foreground hover:text-primary transition-all duration-200 rounded-lg hover:bg-muted active:scale-95 active:bg-primary/10"
                     aria-label="Close menu"
                   >
                     <X className="h-6 w-6" />
@@ -206,11 +219,12 @@ export function Navbar() {
                       >
                         <Link
                           href={link.href}
-                          className="relative block py-3 text-lg font-medium text-foreground hover:text-primary transition-colors group"
+                          className="relative block py-3 text-lg font-medium text-foreground hover:text-primary transition-all duration-200 group active:scale-95 active:text-primary/80"
                           onClick={() => setIsOpen(false)}
                         >
                           {link.label}
-                          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+                          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent group-hover:w-full transition-all duration-300"></span>
+                          <span className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg opacity-0 group-active:opacity-100 transition-opacity duration-200"></span>
                         </Link>
                       </motion.div>
                     ))}
@@ -219,20 +233,21 @@ export function Navbar() {
 
                 {/* Social Links */}
                 <div className="border-t border-border px-6 py-8">
-                  <div className="flex space-x-4">
+                  <div className="flex justify-center space-x-4">
                     {socialLinks.map((social, index) => (
                       <motion.a
                         key={social.label}
                         href={social.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-3 text-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted"
+                        className="relative p-3 text-foreground hover:text-primary transition-all duration-200 rounded-lg hover:bg-muted active:scale-95 active:bg-primary/10 group"
                         aria-label={social.label}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.4 + index * 0.1 }}
                       >
                         <social.icon className="h-6 w-6" />
+                        <span className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 rounded-lg opacity-0 group-active:opacity-100 transition-opacity duration-200"></span>
                       </motion.a>
                     ))}
                   </div>
