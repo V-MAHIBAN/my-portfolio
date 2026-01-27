@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X, Github, Linkedin, Twitter } from "lucide-react"
@@ -8,6 +8,39 @@ import { ModeToggle } from "./mode-toggle"
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isHeroVisible, setIsHeroVisible] = useState(true)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const isVisible = entry.isIntersecting
+        if (isVisible !== isHeroVisible) {
+          setIsTransitioning(true)
+          setIsHeroVisible(isVisible)
+          // Reset transitioning after animation completes
+          setTimeout(() => setIsTransitioning(false), 400)
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1, // Trigger when 10% of hero section is visible
+      }
+    )
+
+    // Observe the hero section
+    const heroElement = document.getElementById('hero')
+    if (heroElement) {
+      observer.observe(heroElement)
+    }
+
+    return () => {
+      if (heroElement) {
+        observer.unobserve(heroElement)
+      }
+    }
+  }, [isHeroVisible])
 
   const navLinks = [
     { href: "#hero", label: "Home" },
@@ -25,64 +58,101 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-background/95 via-primary/5 to-accent/5 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-primary/20">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between">
-            {/* Logo */}
-            <Link href="/" className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Mahiban
-            </Link>
+      <AnimatePresence mode="wait">
+        {isHeroVisible && (
+          <motion.nav
+            initial={{ y: 0 }}
+            animate={{ y: 0 }}
+            exit={{ y: -100, opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-background/95 via-primary/5 to-accent/5 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-primary/20"
+          >
+            <div className="container mx-auto px-4">
+              <div className="flex h-16 items-center justify-between">
+                {/* Logo */}
+                <Link href="/" className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  Mahiban
+                </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <nav className="flex items-center space-x-6">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="relative text-foreground hover:text-primary transition-colors font-medium group"
+                {/* Desktop Navigation */}
+                <div className="hidden md:flex items-center space-x-8">
+                  <nav className="flex items-center space-x-6">
+                    {navLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="relative text-foreground hover:text-primary transition-colors font-medium group"
+                      >
+                        {link.label}
+                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+                      </Link>
+                    ))}
+                  </nav>
+                </div>
+
+                {/* Desktop Social & Theme */}
+                <div className="hidden md:flex items-center space-x-4">
+                  {socialLinks.map((social) => (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-foreground hover:text-primary transition-colors"
+                      aria-label={social.label}
+                    >
+                      <social.icon className="h-5 w-5" />
+                    </a>
+                  ))}
+                  <span className="text-muted-foreground">|</span>
+                  <ModeToggle />
+                </div>
+
+                {/* Mobile Menu Button */}
+                <div className="md:hidden flex items-center space-x-2">
+                  <ModeToggle />
+                  <button
+                    onClick={() => setIsOpen(true)}
+                    className="p-2 text-foreground hover:text-primary transition-colors"
+                    aria-label="Open menu"
                   >
-                    {link.label}
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
-                  </Link>
-                ))}
-              </nav>
+                    <Menu className="h-6 w-6" />
+                  </button>
+                </div>
+              </div>
             </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
 
-            {/* Desktop Social & Theme */}
-            <div className="hidden md:flex items-center space-x-4">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                  aria-label={social.label}
+      {/* Second Navbar - Only visible when hero section is not visible and on desktop */}
+      <AnimatePresence>
+        {!isHeroVisible && !isTransitioning && (
+          <motion.nav
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -50, opacity: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+            className="fixed top-4 left-1/2 transform -translate-x-1/2 z-40 hidden md:block"
+          >
+          <div className="bg-background/95 backdrop-blur-md border border-border rounded-full px-6 py-3 shadow-lg">
+            <nav className="flex items-center space-x-6">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="relative text-foreground hover:text-primary transition-colors font-medium text-sm group"
                 >
-                  <social.icon className="h-5 w-5" />
-                </a>
+                  {link.label}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+                </Link>
               ))}
-              <span className="text-muted-foreground">|</span>
-              <ModeToggle />
-            </div>
-
-            {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center space-x-2">
-              <ModeToggle />
-              <button
-                onClick={() => setIsOpen(true)}
-                className="p-2 text-foreground hover:text-primary transition-colors"
-                aria-label="Open menu"
-              >
-                <Menu className="h-6 w-6" />
-              </button>
-            </div>
+            </nav>
           </div>
-        </div>
-      </nav>
+        </motion.nav>
+      )}
+      </AnimatePresence>
 
-      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isOpen && (
           <>
